@@ -28,6 +28,7 @@ namespace FourtitudeAspNet
             builder.Services.AddScoped<IPartnerService, PartnerService>();
             builder.Services.AddScoped<ISignatureService, SignatureService>();
             builder.Services.AddScoped<ITransactionValidationService, TransactionValidationService>();
+            builder.Services.AddScoped<IDiscountService, DiscountService>();
  
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

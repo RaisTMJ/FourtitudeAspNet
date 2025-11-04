@@ -9,16 +9,17 @@ namespace FourtitudeAspNet.Services
     {
         private readonly IPartnerService _partnerService;
         private readonly ISignatureService _signatureService;
+        private readonly IDiscountService _discountService;
 
-        public TransactionValidationService(IPartnerService partnerService, ISignatureService signatureService)
+        public TransactionValidationService(IPartnerService partnerService, ISignatureService signatureService, IDiscountService discountService)
         {
             _partnerService = partnerService;
             _signatureService = signatureService;
+            _discountService = discountService;
         }
 
         public TransactionResponse ValidateTransaction(TransactionRequest request)
         {
-            // Validate partner authentication
             if (!_partnerService.ValidatePartner(request.PartnerKey, request.PartnerPassword))
             {
                 return new TransactionResponse
@@ -28,7 +29,6 @@ namespace FourtitudeAspNet.Services
                 };
             }
 
-            // Validate signature
             if (!_signatureService.ValidateSignature(request.Timestamp, request.PartnerKey, request.PartnerRefNo, request.TotalAmount, request.PartnerPassword, request.Sig))
             {
                 return new TransactionResponse
@@ -38,7 +38,6 @@ namespace FourtitudeAspNet.Services
                 };
             }
 
-            // Validate business logic
             var validationResult = ValidateBusinessRules(request);
             if (!validationResult.IsValid)
             {
@@ -49,12 +48,14 @@ namespace FourtitudeAspNet.Services
                 };
             }
 
+            var discountResult = _discountService.CalculateDiscount(request.TotalAmount);
+
             return new TransactionResponse
             {
                 Result = 1,
                 TotalAmount = request.TotalAmount,
-                TotalDiscount = 0,
-                FinalAmount = request.TotalAmount
+                TotalDiscount = discountResult.TotalDiscount,
+                FinalAmount = discountResult.FinalAmount
             };
         }
 
