@@ -4,3 +4,67 @@ GET {{FourtitudeAspNet_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Transaction API Tests
+
+### Valid Transaction Request
+POST {{FourtitudeAspNet_HostAddress}}/api/submittrxmessage
+Content-Type: application/json
+
+{
+"partnerkey": "FG-00001",
+  "partnerrefno": "FG-000001",
+  "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
+  "totalamount": 121300,
+  "items": [
+    {
+      "partneritemref": "ITEM001",
+      "name": "Test Item",
+"qty": 1,
+      "unitprice": 121300
+    }
+  ],
+  "timestamp": "2025-11-05T04:52:35.0000000Z",
+  "sig": "NWMyODMzYTU4M2Y5YTY1NzBjYzYyNzVhZDhiZWFiNDE5MmE5NmY1YWRiNzEyNzlhMTgwMTU3ZGM5OTZjNjZhNg=="
+}
+
+### Invalid Partner Key Test
+POST {{FourtitudeAspNet_HostAddress}}/api/submittrxmessage
+Content-Type: application/json
+
+{
+  "partnerkey": "INVALID",
+  "partnerrefno": "FG-000001",
+  "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
+  "totalamount": 1000,
+  "timestamp": "2024-08-15T02:11:22.0000000Z",
+  "sig": "MDE3ZTBkODg4ZDNhYzU0ZDBlZWRmNmU2NmUyOWRhZWU4Y2M1NzQ1OTIzZGRjYTc1ZGNjOTkwYzg2MWJlMDExMw=="
+}
+
+### Invalid Signature Test
+POST {{FourtitudeAspNet_HostAddress}}/api/submittrxmessage
+Content-Type: application/json
+
+{
+  "partnerkey": "FG-00001",
+  "partnerrefno": "FG-000001",
+  "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
+  "totalamount": 1000,
+  "timestamp": "2024-08-15T02:11:22.0000000Z",
+  "sig": "INVALIDSIGNATURE"
+}
+
+### Negative Amount Test
+POST {{FourtitudeAspNet_HostAddress}}/api/submittrxmessage
+Content-Type: application/json
+
+{
+  "partnerkey": "FG-00001",
+  "partnerrefno": "FG-000001",
+  "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
+  "totalamount": -1000,
+  "timestamp": "2024-08-15T02:11:22.0000000Z",
+  "sig": "MDE3ZTBkODg4ZDNhYzU0ZDBlZWRmNmU2NmUyOWRhZWU4Y2M1NzQ1OTIzZGRjYTc1ZGNjOTkwYzg2MWJlMDExMw=="
+}
+
+###
