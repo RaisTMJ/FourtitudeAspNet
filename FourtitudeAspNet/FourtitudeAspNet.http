@@ -1,0 +1,6 @@
+@FourtitudeAspNet_HostAddress = https://localhost:44387
+
+GET {{FourtitudeAspNet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
