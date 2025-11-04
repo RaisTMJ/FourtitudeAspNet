@@ -2,6 +2,7 @@ using FourtitudeAspNet.Interface;
 using FourtitudeAspNet.Services;
 using FourtitudeAspNet.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Net.WebSockets;
 
 namespace FourtitudeAspNet
 {
@@ -14,9 +15,14 @@ namespace FourtitudeAspNet
             // Add services to the container.
             builder.Services.AddControllers();
 
+            // get Conectionstring default connection
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnections");
+
+
+
             // Add Entity Framework with SQLite
             builder.Services.AddDbContext<FourtitudeDbContext>(options =>
-                options.UseSqlite("Data Source=FourtitudeDb.db"));
+                options.UseSqlite(connectionString));
       
             // Register custom services
             builder.Services.AddScoped<IPartnerService, PartnerService>();

@@ -5,33 +5,33 @@ namespace FourtitudeAspNet.Models
 {
     public class TransactionRequest
     {
-        [Required]
+        //[Required]
         [StringLength(50)]
         [JsonPropertyName("partnerkey")]
         public string PartnerKey { get; set; } = string.Empty;
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         [JsonPropertyName("partnerrefno")]
         public string PartnerRefNo { get; set; } = string.Empty;
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         [JsonPropertyName("partnerpassword")]
         public string PartnerPassword { get; set; } = string.Empty;
 
-        [Required]
+        //[Required]
         [JsonPropertyName("totalamount")]
         public long TotalAmount { get; set; }
 
         [JsonPropertyName("items")]
         public List<ItemDetail>? Items { get; set; }
 
-        [Required]
+        //[Required]
         [JsonPropertyName("timestamp")]
         public string Timestamp { get; set; } = string.Empty;
 
-        [Required]
+        //[Required]
         [JsonPropertyName("sig")]
         public string Sig { get; set; } = string.Empty;
     }
