@@ -1,3 +1,5 @@
+using FourtitudeAspNet.Interface;
+using FourtitudeAspNet.Services;
 
 namespace FourtitudeAspNet
 {
@@ -8,8 +10,13 @@ namespace FourtitudeAspNet
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
+      
+            // Register custom services
+            builder.Services.AddScoped<IPartnerService, PartnerService>();
+            builder.Services.AddScoped<ISignatureService, SignatureService>();
+            builder.Services.AddScoped<ITransactionValidationService, TransactionValidationService>();
+ 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,7 +33,6 @@ namespace FourtitudeAspNet
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
