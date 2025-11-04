@@ -1,5 +1,7 @@
 using FourtitudeAspNet.Interface;
 using FourtitudeAspNet.Services;
+using FourtitudeAspNet.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FourtitudeAspNet
 {
@@ -11,6 +13,10 @@ namespace FourtitudeAspNet
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            // Add Entity Framework with SQLite
+            builder.Services.AddDbContext<FourtitudeDbContext>(options =>
+                options.UseSqlite("Data Source=FourtitudeDb.db"));
       
             // Register custom services
             builder.Services.AddScoped<IPartnerService, PartnerService>();
@@ -22,6 +28,21 @@ namespace FourtitudeAspNet
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            // Ensure database is created and migrated
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<FourtitudeDbContext>();
+                try
+                {
+                    context.Database.Migrate();
+                }
+                catch
+                {
+                    // Fallback to EnsureCreated if migrations fail
+                    context.Database.EnsureCreated();
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
