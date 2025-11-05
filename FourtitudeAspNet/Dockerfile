@@ -33,10 +33,12 @@ USER root
 RUN mkdir -p /data && chown app /data
 # Create /app/data if you prefer to use relative paths
 RUN mkdir -p /app/data && chown app /app/data
+# Create /logs for log file storage
+RUN mkdir -p /logs && chown app /logs
 USER app
 
 # --- Declare volume for persistence ---
-VOLUME ["/data"]
+VOLUME ["/data", "/logs"]
 
 WORKDIR /app
 COPY --from=publish /app/publish .

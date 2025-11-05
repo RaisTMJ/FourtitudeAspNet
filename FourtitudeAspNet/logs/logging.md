@@ -1,0 +1,1 @@
+﻿log4net will be stream in this folder

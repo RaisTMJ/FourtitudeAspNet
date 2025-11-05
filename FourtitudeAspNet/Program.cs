@@ -1,8 +1,11 @@
 using FourtitudeAspNet.Interface;
 using FourtitudeAspNet.Services;
 using FourtitudeAspNet.Data;
+using FourtitudeAspNet.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Net.WebSockets;
+using log4net;
+using FourtitudeAspNet.Middleware;
 
 namespace FourtitudeAspNet
 {
@@ -12,18 +15,19 @@ namespace FourtitudeAspNet
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configure log4net programmatically
+            Log4NetConfiguration.ConfigureLog4Net();
+
             // Add services to the container.
             builder.Services.AddControllers();
 
             // get Conectionstring default connection
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
-
             // Add Entity Framework with SQLite
             builder.Services.AddDbContext<FourtitudeDbContext>(options =>
                 options.UseSqlite(connectionString));
-      
+ 
             // Register custom services
             builder.Services.AddScoped<IPartnerService, PartnerService>();
             builder.Services.AddScoped<ISignatureService, SignatureService>();
@@ -61,6 +65,8 @@ namespace FourtitudeAspNet
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.MapControllers();
 
