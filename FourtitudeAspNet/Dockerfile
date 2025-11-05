@@ -1,30 +1,45 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+# Base image (runtime)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Copy project file and restore dependencies
 COPY ["FourtitudeAspNet/FourtitudeAspNet.csproj", "FourtitudeAspNet/"]
-RUN dotnet restore "./FourtitudeAspNet/FourtitudeAspNet.csproj"
+RUN dotnet restore "FourtitudeAspNet/FourtitudeAspNet.csproj"
+
+# Copy all source code
 COPY . .
 WORKDIR "/src/FourtitudeAspNet"
-RUN dotnet build "./FourtitudeAspNet.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "FourtitudeAspNet.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Publish the app
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./FourtitudeAspNet.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FourtitudeAspNet.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Final runtime stage
 FROM base AS final
+
+# --- Create writable data directory ---
+USER root
+# Create /data for SQLite file storage
+RUN mkdir -p /data && chown app /data
+# Create /app/data if you prefer to use relative paths
+RUN mkdir -p /app/data && chown app /app/data
+USER app
+
+# --- Declare volume for persistence ---
+VOLUME ["/data"]
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# --- Start the app ---
 ENTRYPOINT ["dotnet", "FourtitudeAspNet.dll"]
