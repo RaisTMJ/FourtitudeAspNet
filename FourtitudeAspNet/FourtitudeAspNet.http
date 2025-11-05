@@ -1,7 +1,6 @@
+File: FourtitudeAspNet\FourtitudeAspNet.http
+````````
 @FourtitudeAspNet_HostAddress = https://localhost:44387
-
-GET {{FourtitudeAspNet_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###
 
@@ -68,3 +67,22 @@ Content-Type: application/json
 }
 
 ###
+
+# Signature Generation API Test
+
+### Generate Signature Request
+POST {{FourtitudeAspNet_HostAddress}}/api/GetSig
+Content-Type: application/json
+
+{
+  "partnerkey": "FG-00001",
+  "partnerrefno": "FG-000001",
+  "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
+  "totalamount": 121300,
+  "timestamp": "2025-11-05T04:52:35.0000000Z"
+}
+
+###
+````````
+
+# Response
