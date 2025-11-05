@@ -1,8 +1,6 @@
-File: FourtitudeAspNet\FourtitudeAspNet.http
-````````
+
 @FourtitudeAspNet_HostAddress = https://localhost:44387
 
-###
 
 # Transaction API Tests
 
@@ -23,8 +21,8 @@ Content-Type: application/json
       "unitprice": 121300
     }
   ],
-  "timestamp": "2025-11-05T04:52:35.0000000Z",
-  "sig": "NWMyODMzYTU4M2Y5YTY1NzBjYzYyNzVhZDhiZWFiNDE5MmE5NmY1YWRiNzEyNzlhMTgwMTU3ZGM5OTZjNjZhNg=="
+  "timestamp": "2025-11-05T11:59:35.0000000Z",
+   "sig": "YzI3OTg1OTZlYWYzMGE5NzQwNDYzNTE4YTFjZDU5NGM3MWVmZTU3MTUyYmIwZTcxOTZhMjI2NGI5Mjc4MjM2Yw=="
 }
 
 ### Invalid Partner Key Test
@@ -78,11 +76,10 @@ Content-Type: application/json
   "partnerkey": "FG-00001",
   "partnerrefno": "FG-000001",
   "partnerpassword": "RkFLRVBBU1NXT1JEMTIzNA==",
-  "totalamount": 121300,
-  "timestamp": "2025-11-05T04:52:35.0000000Z"
+  "totalamount": 121300
 }
 
 ###
-````````
+
 
 # Response

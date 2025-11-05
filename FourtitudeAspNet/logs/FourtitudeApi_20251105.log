@@ -1,0 +1,17 @@
+2025-11-05 12:29:21 [11] INFO  FourtitudeAspNet.Middleware.RequestResponseLoggingMiddleware - Request: POST /api/submittrxmessage - Body: {
+"partnerkey": "FG-00001",
+  "partnerrefno": "FG-000001",
+  "partnerpassword":"********",
+  "totalamount": 121300,
+  "items": [
+    {
+      "partneritemref": "ITEM001",
+      "name": "Test Item",
+"qty": 1,
+      "unitprice": 121300
+    }
+  ],
+  "timestamp": "2025-11-05T11:59:35.0000000Z",
+   "sig": "YzI3OTg1OTZlYWYzMGE5NzQwNDYzNTE4YTFjZDU5NGM3MWVmZTU3MTUyYmIwZTcxOTZhMjI2NGI5Mjc4MjM2Yw=="
+}
+2025-11-05 12:29:23 [11] INFO  FourtitudeAspNet.Middleware.RequestResponseLoggingMiddleware - Response: 200 - Body: {"result":0,"totalamount":null,"totaldiscount":null,"finalamount":null,"resultmessage":"Expired."}
