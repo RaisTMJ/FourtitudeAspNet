@@ -16,7 +16,7 @@ namespace FourtitudeAspNet
             builder.Services.AddControllers();
 
             // get Conectionstring default connection
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnections");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 
