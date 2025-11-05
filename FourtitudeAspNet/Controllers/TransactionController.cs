@@ -10,10 +10,12 @@ namespace FourtitudeAspNet.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionValidationService _transactionValidationService;
+        private readonly ISignatureService _signatureService;
 
-        public TransactionController(ITransactionValidationService transactionValidationService)
+        public TransactionController(ITransactionValidationService transactionValidationService, ISignatureService signatureService)
         {
             _transactionValidationService = transactionValidationService;
+            _signatureService = signatureService;
         }
 
         [HttpPost("submittrxmessage")]
@@ -41,6 +43,30 @@ namespace FourtitudeAspNet.Controllers
                     Result = 0,
                     ResultMessage = "Internal server error"
                 });
+            }
+        }
+
+        [HttpPost("GetSig")]
+        public IActionResult GetSig([FromBody] SignatureRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid request format");
+                }
+
+                var signature = _signatureService.GenerateSignature(request.Timestamp, request.PartnerKey, request.PartnerRefNo, request.TotalAmount, request.PartnerPassword);
+
+                return Ok(new { Signature = signature });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
             }
         }
     }

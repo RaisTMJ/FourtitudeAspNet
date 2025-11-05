@@ -34,5 +34,33 @@ namespace FourtitudeAspNet.Services
                 return false;
             }
         }
+
+        public string GenerateSignature(string? timestamp, string partnerKey, string partnerRefNo, long totalAmount, string partnerPassword)
+        {
+            try
+            {
+                DateTime parsedTimestamp;
+                if (string.IsNullOrEmpty(timestamp))
+                {
+                    parsedTimestamp = DateTime.UtcNow;
+                }
+                else
+                {
+                    parsedTimestamp = DateTime.Parse(timestamp, null, DateTimeStyles.RoundtripKind);
+                }
+                var formattedTimestamp = parsedTimestamp.ToString("yyyyMMddHHmmss");
+                var concatenatedString = $"{formattedTimestamp}{partnerKey}{partnerRefNo}{totalAmount}{partnerPassword}";
+                using var sha256 = SHA256.Create();
+                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(concatenatedString));
+                var hexHash = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                var calculatedSignature = Convert.ToBase64String(Encoding.UTF8.GetBytes(hexHash));
+
+                return calculatedSignature;
+            }
+            catch
+            {
+                throw new ArgumentException("Invalid parameters for signature generation");
+            }
+        }
     }
 }
